@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using CSharpBasic.Configs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -13,6 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Mnemosyne.Logging.Extensions;
 using Mnemosyne.Logging.Interfaces;
 
 namespace CSharpBasic
@@ -34,8 +36,10 @@ namespace CSharpBasic
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(ILoggerFactory loggerFactory, IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
         {
+            loggerFactory.AddNLoggerProvider(serviceProvider.GetService<LoggerConfig>());
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -67,6 +71,7 @@ namespace CSharpBasic
             services.AddSingleton<ITraceIdProvider, TraceIdProvider>();
             services.AddSingleton<ILogNameProvider, LogNameProvider>();
             services.AddSingleton<ILoggerFactory, LoggerFactory>();
+            services.AddSingleton<LoggerConfig>();
         }
     }
 

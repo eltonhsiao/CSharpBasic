@@ -22,6 +22,7 @@ namespace CSharpBasic.Controllers
         [HttpGet]
         public object Get()
         {
+            _logger.LogInformation($"hello world");
             return HttpContext.Connection.RemoteIpAddress.ToString();
         }
     }
